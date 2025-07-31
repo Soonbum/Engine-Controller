@@ -7,7 +7,7 @@ NVR 엔진 제어 코드
    * sudo make
    * sudo make install
    * sudo ldconfig
-4. Qt Creator로 프로젝트를 생성합니다.
+4. Qt 5 Creator로 프로젝트를 생성합니다.
 5. 프로젝트에 다음 파일들을 포함시킵니다.
    * Headers: Cls_EngineNVR.h, CyUSBSerial.h
    * Sources: Cls_EngineNVR.cpp
