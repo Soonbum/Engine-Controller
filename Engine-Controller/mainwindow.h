@@ -8,6 +8,9 @@
 #include <QLineEdit>
 #include <QLabel>
 
+#include <QTcpServer>
+#include <QTcpSocket>
+
 #include "imagewindow.h"
 #include "IEngine.h"
 #include "Cls_EngineNVR.h"
@@ -41,13 +44,27 @@ private slots:
     void on_pushButtonSetFlipY_clicked();
     void on_pushButtonDemoPlay_clicked();
 
+    void handleNewConnection();
+    void handleClientData();
+    void handleClientDisconnect();
+    void updateServerState();
+
 private:
     void setupUi();
 
     Ui::MainWindow *ui;
     ImageWindow *m_imageWindow;
     IEngine *m_currentEngine;
-    QString imagePath;
+    QString engineResolution;
+    QString imagePath;  // 테스트용 임시 이미지 파일 경로 (소켓 통신시에서는 사용하지 않음)
+
+    QTcpServer *m_server;
+    QTcpSocket *m_clientSocket;
+    qint64 m_expectedImageSize;     // 수신할 이미지 전체 크기
+    QByteArray m_imageDataBuffer;
+
+    bool socketOpen();
+    bool socketClose();
 };
 
 #endif // MAINWINDOW_H
