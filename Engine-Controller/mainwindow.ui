@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>492</width>
+    <height>262</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QPushButton" name="pushButtonProjectorOn">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>60</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ProjectorOn</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBoxTestMode">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>95</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TestMode</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxEngineSelect">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>151</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonProjectorOff">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>90</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ProjectorOff</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonLEDOn">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>60</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>LEDOn</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonLEDOff">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>90</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>LEDOff</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonGetCurrent">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>60</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>GetCurrent</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSetCurrent">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>60</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SetCurrent</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonImageMount">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>150</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ImageMount</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSetFlipX">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>150</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SetFlipX</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSelectImage">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>150</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SelectImage</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSetFlipY">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>150</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SetFlipY</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditSetCurrent">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>90</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditGetCurrent">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>90</y>
+      <width>91</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>492</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>comboBoxEngineSelect</tabstop>
+  <tabstop>checkBoxTestMode</tabstop>
+  <tabstop>pushButtonProjectorOn</tabstop>
+  <tabstop>pushButtonProjectorOff</tabstop>
+  <tabstop>pushButtonLEDOn</tabstop>
+  <tabstop>pushButtonLEDOff</tabstop>
+  <tabstop>pushButtonSetCurrent</tabstop>
+  <tabstop>lineEditSetCurrent</tabstop>
+  <tabstop>pushButtonGetCurrent</tabstop>
+  <tabstop>lineEditGetCurrent</tabstop>
+  <tabstop>pushButtonImageMount</tabstop>
+  <tabstop>pushButtonSelectImage</tabstop>
+  <tabstop>pushButtonSetFlipX</tabstop>
+  <tabstop>pushButtonSetFlipY</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
