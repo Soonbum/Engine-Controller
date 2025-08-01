@@ -57,6 +57,6 @@
 
 * 서비스 확인: `sudo systemctl status engine-controller`라고 입력하면 서비스가 잘 실행되고 있는지 확인 가능합니다.
 
-8. VNC를 이용해서 라즈베리파이를 제어하는 것을 권장합니다.
+## VNC를 이용해서 라즈베리파이를 제어하는 것을 권장합니다.
 
 * PC: RealVNC Viewer > Raspberry Pi: VNC Server (계정: pi / 패스워드: raspberry 혹은 별도 설정한 패스워드)
