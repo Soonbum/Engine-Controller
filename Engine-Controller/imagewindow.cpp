@@ -61,6 +61,9 @@ int ImageWindow::rotationAngle() const
 
 void ImageWindow::updateImage(const QPixmap &pixmap)
 {
+    // 이 창을 활성화하여 맨 앞으로 가져옵니다.
+    this->activateWindow();
+    
     QImage image = pixmap.toImage();
 
     // 필요한 경우 회전 적용
