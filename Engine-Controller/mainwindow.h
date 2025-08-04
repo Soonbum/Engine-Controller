@@ -62,6 +62,7 @@ private:
     QTcpSocket *m_clientSocket;
     qint64 m_expectedImageSize;     // 수신할 이미지 전체 크기
     QByteArray m_imageDataBuffer;
+    bool m_expectingImageHeader;    // true일 경우, 다음 데이터는 이미지 헤더임
 
     bool socketOpen();
     bool socketClose();

@@ -93,7 +93,7 @@
             // 
             TextBoxIP.Location = new Point(201, 21);
             TextBoxIP.Name = "TextBoxIP";
-            TextBoxIP.Size = new Size(131, 23);
+            TextBoxIP.Size = new Size(217, 23);
             TextBoxIP.TabIndex = 4;
             TextBoxIP.Text = "192.168.1.143";
             // 
@@ -101,7 +101,7 @@
             // 
             TextBoxPort.Location = new Point(201, 48);
             TextBoxPort.Name = "TextBoxPort";
-            TextBoxPort.Size = new Size(131, 23);
+            TextBoxPort.Size = new Size(217, 23);
             TextBoxPort.TabIndex = 5;
             TextBoxPort.Text = "52852";
             // 
@@ -110,7 +110,7 @@
             TextBoxResult.Location = new Point(201, 75);
             TextBoxResult.Name = "TextBoxResult";
             TextBoxResult.ReadOnly = true;
-            TextBoxResult.Size = new Size(131, 23);
+            TextBoxResult.Size = new Size(217, 23);
             TextBoxResult.TabIndex = 6;
             // 
             // ButtonDisconnect
@@ -243,17 +243,16 @@
             // ComboBoxEngineModel
             // 
             ComboBoxEngineModel.FormattingEnabled = true;
-            ComboBoxEngineModel.Items.AddRange(new object[] { "NVR", "NQM+" });
-            ComboBoxEngineModel.Location = new Point(388, 21);
+            ComboBoxEngineModel.Location = new Point(435, 21);
             ComboBoxEngineModel.Name = "ComboBoxEngineModel";
-            ComboBoxEngineModel.Size = new Size(150, 23);
+            ComboBoxEngineModel.Size = new Size(103, 23);
             ComboBoxEngineModel.TabIndex = 20;
             // 
             // ButtonEngineSet
             // 
-            ButtonEngineSet.Location = new Point(388, 48);
+            ButtonEngineSet.Location = new Point(435, 48);
             ButtonEngineSet.Name = "ButtonEngineSet";
-            ButtonEngineSet.Size = new Size(150, 41);
+            ButtonEngineSet.Size = new Size(103, 41);
             ButtonEngineSet.TabIndex = 21;
             ButtonEngineSet.Text = "EngineSet";
             ButtonEngineSet.UseVisualStyleBackColor = true;

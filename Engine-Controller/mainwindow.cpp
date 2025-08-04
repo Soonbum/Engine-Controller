@@ -12,7 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_currentEngine(nullptr),
     m_server(nullptr),
     m_clientSocket(nullptr),
-    m_expectedImageSize(0)
+    m_expectedImageSize(0),
+    m_expectingImageHeader(false)
 {
     ui->setupUi(this);
 
@@ -247,35 +248,116 @@ void MainWindow::handleClientData()
 {
     if (!m_clientSocket) return;
 
-    // 헤더(이미지 크기)를 아직 받지 않은 경우
-    if (m_expectedImageSize == 0) {
-        if (m_clientSocket->bytesAvailable() < 8) return;   // 8바이트 모일 때까지 대기
+    // 상태 1: 이미지 수신 중인 경우 (데이터만 계속 받음)
+    // 이 상태에서는 다른 어떤 텍스트 명령어도 처리하지 않고 오직 이미지 데이터만 버퍼에 추가합니다.
+    if (m_expectedImageSize > 0)
+    {
+        m_imageDataBuffer.append(m_clientSocket->readAll());
+    }
+    // 상태 2: 대기 중인 경우 (텍스트 명령어 또는 이미지 헤더를 기다림)
+    else
+    {
+        // 2-1. 이미지 헤더를 기다리는 상태일 경우
+        if (m_expectingImageHeader)
+        {
+            if (m_clientSocket->bytesAvailable() >= 8)
+            {
+                QByteArray header = m_clientSocket->read(8);
+                QDataStream stream(&header, QIODevice::ReadOnly);
+                stream.setByteOrder(QDataStream::LittleEndian);
+                stream >> m_expectedImageSize;
 
-        QByteArray header = m_clientSocket->read(8);
-        QDataStream stream(&header, QIODevice::ReadOnly);
-        stream.setByteOrder(QDataStream::LittleEndian);     //C# BitConverter는 LittleEndian
-        stream >> m_expectedImageSize;
-        qDebug() << "수신할 이미지 크기: " << m_expectedImageSize;
+                qDebug() << "수신할 이미지 크기:" << m_expectedImageSize;
+
+                if (m_expectedImageSize <= 0) {
+                    qDebug() << "오류: 유효하지 않은 이미지 크기를 수신했습니다.";
+                    m_expectedImageSize = 0; // 상태 리셋
+                }
+                
+                // 헤더를 성공적으로 읽었으므로 플래그를 다시 false로 변경
+                m_expectingImageHeader = false;
+                // 헤더와 함께 온 데이터가 있다면 버퍼에 추가
+                m_imageDataBuffer.append(m_clientSocket->readAll());
+            }
+        }
+
+        // 2-2. 텍스트 명령어를 처리하는 경우 (이미지 헤더를 기다리는 상태가 아닐 때)
+        while (m_clientSocket->canReadLine())
+        {
+            QByteArray line = m_clientSocket->readLine().trimmed();
+
+            // "Image:" 명령을 받으면, 다음 데이터는 이미지 헤더임을 인지하고 루프를 빠져나감
+            if (line == "Image:") {
+                qDebug() << "원격 명령: Image Transfer 시작";
+                m_expectingImageHeader = true;
+                break; // 텍스트 처리 중단하고 다음 데이터(헤더)를 기다림
+            }
+
+            // --- 기타 다른 텍스트 명령어 처리 ---
+            if (line.startsWith("EngineSet:")) {
+                QString engineName = QString(line.mid(10));
+                QMetaObject::invokeMethod(this, [this, engineName]() {
+                    ui->comboBoxEngineSelect->setCurrentText(engineName);
+                }, Qt::QueuedConnection);
+                qDebug() << "원격 명령으로 엔진을" << engineName << "으로 변경합니다.";
+            }
+            else if (line == "ProjectorOn") {
+                qDebug() << "원격 명령: Projector On";
+                QMetaObject::invokeMethod(this, &MainWindow::on_pushButtonProjectorOn_clicked, Qt::QueuedConnection);
+            }
+            else if (line == "ProjectorOff") {
+                qDebug() << "원격 명령: Projector Off";
+                QMetaObject::invokeMethod(this, &MainWindow::on_pushButtonProjectorOff_clicked, Qt::QueuedConnection);
+            }
+            else if (line == "LEDOn") {
+                qDebug() << "원격 명령: LED On";
+                QMetaObject::invokeMethod(this, &MainWindow::on_pushButtonLEDOn_clicked, Qt::QueuedConnection);
+            }
+            else if (line == "LEDOff") {
+                qDebug() << "원격 명령: LED Off";
+                QMetaObject::invokeMethod(this, &MainWindow::on_pushButtonLEDOff_clicked, Qt::QueuedConnection);
+            }
+            else if (line.startsWith("SetCurrent:")) {
+                bool ok;
+                int value = QString(line.mid(11)).toInt(&ok);
+                if (ok) {
+                    qDebug() << "원격 명령: Set Current to" << value;
+                    QMetaObject::invokeMethod(this, [this, value]() {
+                        if (m_currentEngine) m_currentEngine->setLEDCurrent(value);
+                    }, Qt::QueuedConnection);
+                    ui->lineEditSetCurrent->setText(QString::number(value));
+                }
+            }
+            else if (line == "GetCurrent") {
+                qDebug() << "원격 명령: Get Current";
+                QMetaObject::invokeMethod(this, [this]() {
+                    if (m_currentEngine && m_clientSocket) {
+                        int value = m_currentEngine->getLedCurrent();
+                        QString response = QString("CurrentValue:%1\n").arg(value);
+                        m_clientSocket->write(response.toUtf8());
+                        m_clientSocket->flush();
+                        qDebug() << "클라이언트로 현재 값 전송:" << value;
+                        ui->lineEditGetCurrent->setText(QString::number(value));
+                    }
+                }, Qt::QueuedConnection);
+            }
+        }
     }
 
-    // 이미지 데이터 본문을 버퍼에 추가
-    m_imageDataBuffer.append(m_clientSocket->readAll());
-
-    // 모든 데이터가 도착했는지 확인
-    if (m_imageDataBuffer.size() >= m_expectedImageSize) {
-        qDebug() << "이미지 수신 완료: " << m_imageDataBuffer.size() << " bytes";
+    // 수신 완료 여부 체크 (공통)
+    if (m_expectedImageSize > 0 && m_imageDataBuffer.size() >= m_expectedImageSize)
+    {
+        qDebug() << "이미지 수신 완료:" << m_imageDataBuffer.size() << "bytes";
 
         QPixmap pixmap;
-        // QByteArray(메모리)로부터 QPixmap 이미지 로드
-        if (pixmap.loadFromData(m_imageDataBuffer)) {
-            // ImageWindow에 pixmap 표시
+        if (pixmap.loadFromData(m_imageDataBuffer.left(m_expectedImageSize))) {
             m_imageWindow->updateImage(pixmap);
             qDebug() << "원격 이미지를 화면에 마운트했습니다.";
         } else {
             qDebug() << "수신된 데이터로부터 이미지를 로드할 수 없습니다.";
         }
 
-        // 다음 이미지를 받을 수 있도록 버퍼와 크기 변수 초기화
+        // 상태 리셋
         m_expectedImageSize = 0;
         m_imageDataBuffer.clear();
     }

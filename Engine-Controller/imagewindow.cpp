@@ -12,6 +12,9 @@ ImageWindow::ImageWindow(QWidget *parent) : QLabel(parent)
     palette.setColor(QPalette::Window, Qt::black);
     setAutoFillBackground(true);
     setPalette(palette);
+
+    //이미지를  좌상단으로 정렬
+    this->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 }
 
 ImageWindow::~ImageWindow()
