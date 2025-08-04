@@ -83,6 +83,11 @@ void MainWindow::setControlEnables(bool enabled)
     ui->pushButtonSelectImage->setEnabled(enabled);
     ui->pushButtonSetFlipX->setEnabled(enabled);
     ui->pushButtonSetFlipY->setEnabled(enabled);
+    ui->pushButtonGetFlipX->setEnabled(enabled);
+    ui->pushButtonGetFlipY->setEnabled(enabled);
+    ui->checkBoxGetFlipX->setEnabled(enabled);
+    ui->checkBoxGetFlipY->setEnabled(enabled);
+    ui->pushButtonGetTemp->setEnabled(enabled);
 }
 
 void MainWindow::on_pushButtonProjectorOn_clicked()
@@ -143,12 +148,51 @@ void MainWindow::on_pushButtonSelectImage_clicked()
 
 void MainWindow::on_pushButtonSetFlipX_clicked()
 {
-    // ... if (m_currentEngine) m_currentEngine->imageFlip()
+    if (!m_imageWindow->isFlipX())
+        m_imageWindow->setFlipX(true);
+    else
+        m_imageWindow->setFlipX(false);
 }
 
 void MainWindow::on_pushButtonSetFlipY_clicked()
 {
-    // ... if (m_currentEngine) m_currentEngine->imageFlip()
+    if (!m_imageWindow->isFlipY())
+        m_imageWindow->setFlipY(true);
+    else
+        m_imageWindow->setFlipY(false);
+}
+
+void MainWindow::on_pushButtonGetFlipX_clicked()
+{
+    ui->checkBoxGetFlipX->setChecked(m_imageWindow->isFlipX());
+}
+
+void MainWindow::on_pushButtonGetFlipY_clicked()
+{
+    ui->checkBoxGetFlipY->setChecked(m_imageWindow->isFlipY());
+}
+
+
+void MainWindow::on_pushButtonGetTemp_clicked()
+{
+    // ...
+}
+
+void MainWindow::on_pushButtonSetRotationAngle_clicked()
+{
+    bool ok;
+    int value = ui->lineEditSetRotationAngle->text().toInt(&ok);
+    if (ok) {
+        m_imageWindow->setRotationAngle(value);
+    } else {
+        qDebug() << "0, 90, 180, 270 중 하나를 입력하세요.";
+    }
+}
+
+void MainWindow::on_pushButtonGetRotationAngle_clicked()
+{
+    int value = m_imageWindow->rotationAngle();
+    ui->lineEditGetRotationAngle->setText(QString::number(value));
 }
 
 // 테스트 모드 상태에 따라 소켓 서버를 열거나 닫는 함수
@@ -321,7 +365,7 @@ void MainWindow::handleClientData()
                 bool ok;
                 int value = QString(line.mid(11)).toInt(&ok);
                 if (ok) {
-                    qDebug() << "원격 명령: Set Current to" << value;
+                    qDebug() << "원격 명령: Set Current to " << value;
                     QMetaObject::invokeMethod(this, [this, value]() {
                         if (m_currentEngine) m_currentEngine->setLEDCurrent(value);
                     }, Qt::QueuedConnection);
@@ -333,11 +377,93 @@ void MainWindow::handleClientData()
                 QMetaObject::invokeMethod(this, [this]() {
                     if (m_currentEngine && m_clientSocket) {
                         int value = m_currentEngine->getLedCurrent();
-                        QString response = QString("CurrentValue:%1\n").arg(value);
+                        QString response = QString("GetCurrent:%1\n").arg(value);
                         m_clientSocket->write(response.toUtf8());
                         m_clientSocket->flush();
                         qDebug() << "클라이언트로 현재 값 전송:" << value;
                         ui->lineEditGetCurrent->setText(QString::number(value));
+                    }
+                }, Qt::QueuedConnection);
+            }
+            else if (line.startsWith("SetFlipX:")) {
+                bool ok;
+                int value = QString(line.mid(9)).toInt(&ok);
+                if (ok) {
+                    qDebug() << "원격 명령: Set Flip X " << value;
+                    QMetaObject::invokeMethod(this, [this, value]() {
+                        if (value == 0) {
+                            m_imageWindow->setFlipX(false);
+                            ui->checkBoxGetFlipX->setChecked(false);
+                        } else {
+                            m_imageWindow->setFlipX(true);
+                            ui->checkBoxGetFlipX->setChecked(true);
+                        }
+                    }, Qt::QueuedConnection);
+                }
+            }
+            else if (line.startsWith("SetFlipY:")) {
+                bool ok;
+                int value = QString(line.mid(9)).toInt(&ok);
+                if (ok) {
+                    qDebug() << "원격 명령: Set Flip Y " << value;
+                    QMetaObject::invokeMethod(this, [this, value]() {
+                        if (value == 0) {
+                            m_imageWindow->setFlipY(false);
+                            ui->checkBoxGetFlipY->setChecked(false);
+                        } else {
+                            m_imageWindow->setFlipY(true);
+                            ui->checkBoxGetFlipY->setChecked(true);
+                        }
+                    }, Qt::QueuedConnection);
+                }
+            }
+            else if (line == "GetFlipX") {
+                qDebug() << "원격 명령: Get Flip X";
+                QMetaObject::invokeMethod(this, [this]() {
+                    if (m_clientSocket) {
+                        int value = m_imageWindow->isFlipX();
+                        QString response = QString("GetFlipX:%1\n").arg(value);
+                        m_clientSocket->write(response.toUtf8());
+                        m_clientSocket->flush();
+                        qDebug() << "클라이언트로 현재 값 전송:" << value;
+                        ui->checkBoxGetFlipX->setChecked(value);
+                    }
+                }, Qt::QueuedConnection);
+            }
+            else if (line == "GetFlipY") {
+                qDebug() << "원격 명령: Get Flip Y";
+                QMetaObject::invokeMethod(this, [this]() {
+                    if (m_clientSocket) {
+                        int value = m_imageWindow->isFlipY();
+                        QString response = QString("GetFlipY:%1\n").arg(value);
+                        m_clientSocket->write(response.toUtf8());
+                        m_clientSocket->flush();
+                        qDebug() << "클라이언트로 현재 값 전송:" << value;
+                        ui->checkBoxGetFlipY->setChecked(value);
+                    }
+                }, Qt::QueuedConnection);
+            }
+            else if (line.startsWith("SetRotationAngle:")) {
+                bool ok;
+                int value = QString(line.mid(17)).toInt(&ok);
+                if (ok) {
+                    qDebug() << "원격 명령: Set Rotation Angle " << value;
+                    QMetaObject::invokeMethod(this, [this, value]() {
+                        m_imageWindow->setRotationAngle(value);
+                    }, Qt::QueuedConnection);
+                    ui->lineEditSetRotationAngle->setText(QString::number(value));
+                }
+            }
+            else if (line == "GetRotationAngle") {
+                qDebug() << "원격 명령: Get Rotation Angle";
+                QMetaObject::invokeMethod(this, [this]() {
+                    if (m_clientSocket) {
+                        int value = m_imageWindow->rotationAngle();
+                        QString response = QString("GetRotationAngle:%1\n").arg(value);
+                        m_clientSocket->write(response.toUtf8());
+                        m_clientSocket->flush();
+                        qDebug() << "클라이언트로 현재 값 전송:" << value;
+                        ui->lineEditGetRotationAngle->setText(QString::number(value));
                     }
                 }, Qt::QueuedConnection);
             }
@@ -350,6 +476,7 @@ void MainWindow::handleClientData()
         qDebug() << "이미지 수신 완료:" << m_imageDataBuffer.size() << "bytes";
 
         QPixmap pixmap;
+
         if (pixmap.loadFromData(m_imageDataBuffer.left(m_expectedImageSize))) {
             m_imageWindow->updateImage(pixmap);
             qDebug() << "원격 이미지를 화면에 마운트했습니다.";

@@ -50,6 +50,18 @@
             ButtonSetFlipY = new Button();
             ComboBoxEngineModel = new ComboBox();
             ButtonEngineSet = new Button();
+            ButtonGetFlipY = new Button();
+            ButtonGetFlipX = new Button();
+            TextBoxGetTemp = new TextBox();
+            ButtonGetTemp = new Button();
+            CheckBoxGetFlipX = new CheckBox();
+            CheckBoxGetFlipY = new CheckBox();
+            CheckBoxSetFlipY = new CheckBox();
+            CheckBoxSetFlipX = new CheckBox();
+            TextBoxSetRotationAngle = new TextBox();
+            ButtonSetRotationAngle = new Button();
+            TextBoxGetRotationAngle = new TextBox();
+            ButtonGetRotationAngle = new Button();
             SuspendLayout();
             // 
             // ButtonConnect
@@ -202,7 +214,7 @@
             // 
             // ButtonImageMount
             // 
-            ButtonImageMount.Location = new Point(30, 293);
+            ButtonImageMount.Location = new Point(30, 338);
             ButtonImageMount.Name = "ButtonImageMount";
             ButtonImageMount.Size = new Size(120, 41);
             ButtonImageMount.TabIndex = 16;
@@ -212,7 +224,7 @@
             // 
             // ButtonSelectImage
             // 
-            ButtonSelectImage.Location = new Point(156, 293);
+            ButtonSelectImage.Location = new Point(30, 293);
             ButtonSelectImage.Name = "ButtonSelectImage";
             ButtonSelectImage.Size = new Size(120, 41);
             ButtonSelectImage.TabIndex = 17;
@@ -232,7 +244,7 @@
             // 
             // ButtonSetFlipY
             // 
-            ButtonSetFlipY.Location = new Point(435, 293);
+            ButtonSetFlipY.Location = new Point(326, 338);
             ButtonSetFlipY.Name = "ButtonSetFlipY";
             ButtonSetFlipY.Size = new Size(103, 41);
             ButtonSetFlipY.TabIndex = 19;
@@ -258,10 +270,136 @@
             ButtonEngineSet.UseVisualStyleBackColor = true;
             ButtonEngineSet.Click += ButtonEngineSet_Click;
             // 
+            // ButtonGetFlipY
+            // 
+            ButtonGetFlipY.Location = new Point(435, 338);
+            ButtonGetFlipY.Name = "ButtonGetFlipY";
+            ButtonGetFlipY.Size = new Size(103, 41);
+            ButtonGetFlipY.TabIndex = 23;
+            ButtonGetFlipY.Text = "GetFlipY";
+            ButtonGetFlipY.UseVisualStyleBackColor = true;
+            ButtonGetFlipY.Click += ButtonGetFlipY_Click;
+            // 
+            // ButtonGetFlipX
+            // 
+            ButtonGetFlipX.Location = new Point(435, 293);
+            ButtonGetFlipX.Name = "ButtonGetFlipX";
+            ButtonGetFlipX.Size = new Size(103, 41);
+            ButtonGetFlipX.TabIndex = 22;
+            ButtonGetFlipX.Text = "GetFlipX";
+            ButtonGetFlipX.UseVisualStyleBackColor = true;
+            ButtonGetFlipX.Click += ButtonGetFlipX_Click;
+            // 
+            // TextBoxGetTemp
+            // 
+            TextBoxGetTemp.Font = new Font("맑은 고딕", 18F);
+            TextBoxGetTemp.Location = new Point(156, 340);
+            TextBoxGetTemp.Name = "TextBoxGetTemp";
+            TextBoxGetTemp.ReadOnly = true;
+            TextBoxGetTemp.Size = new Size(120, 39);
+            TextBoxGetTemp.TabIndex = 25;
+            // 
+            // ButtonGetTemp
+            // 
+            ButtonGetTemp.Location = new Point(156, 293);
+            ButtonGetTemp.Name = "ButtonGetTemp";
+            ButtonGetTemp.Size = new Size(120, 41);
+            ButtonGetTemp.TabIndex = 24;
+            ButtonGetTemp.Text = "GetTemp";
+            ButtonGetTemp.UseVisualStyleBackColor = true;
+            ButtonGetTemp.Click += ButtonGetTemp_Click;
+            // 
+            // CheckBoxGetFlipX
+            // 
+            CheckBoxGetFlipX.AutoSize = true;
+            CheckBoxGetFlipX.Location = new Point(544, 305);
+            CheckBoxGetFlipX.Name = "CheckBoxGetFlipX";
+            CheckBoxGetFlipX.Size = new Size(15, 14);
+            CheckBoxGetFlipX.TabIndex = 26;
+            CheckBoxGetFlipX.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxGetFlipY
+            // 
+            CheckBoxGetFlipY.AutoSize = true;
+            CheckBoxGetFlipY.Location = new Point(544, 350);
+            CheckBoxGetFlipY.Name = "CheckBoxGetFlipY";
+            CheckBoxGetFlipY.Size = new Size(15, 14);
+            CheckBoxGetFlipY.TabIndex = 27;
+            CheckBoxGetFlipY.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxSetFlipY
+            // 
+            CheckBoxSetFlipY.AutoSize = true;
+            CheckBoxSetFlipY.Location = new Point(305, 350);
+            CheckBoxSetFlipY.Name = "CheckBoxSetFlipY";
+            CheckBoxSetFlipY.Size = new Size(15, 14);
+            CheckBoxSetFlipY.TabIndex = 29;
+            CheckBoxSetFlipY.UseVisualStyleBackColor = true;
+            // 
+            // CheckBoxSetFlipX
+            // 
+            CheckBoxSetFlipX.AutoSize = true;
+            CheckBoxSetFlipX.Location = new Point(305, 305);
+            CheckBoxSetFlipX.Name = "CheckBoxSetFlipX";
+            CheckBoxSetFlipX.Size = new Size(15, 14);
+            CheckBoxSetFlipX.TabIndex = 28;
+            CheckBoxSetFlipX.UseVisualStyleBackColor = true;
+            // 
+            // TextBoxSetRotationAngle
+            // 
+            TextBoxSetRotationAngle.Font = new Font("맑은 고딕", 18F);
+            TextBoxSetRotationAngle.Location = new Point(30, 455);
+            TextBoxSetRotationAngle.Name = "TextBoxSetRotationAngle";
+            TextBoxSetRotationAngle.Size = new Size(246, 39);
+            TextBoxSetRotationAngle.TabIndex = 31;
+            // 
+            // ButtonSetRotationAngle
+            // 
+            ButtonSetRotationAngle.Font = new Font("맑은 고딕", 9F);
+            ButtonSetRotationAngle.Location = new Point(30, 408);
+            ButtonSetRotationAngle.Name = "ButtonSetRotationAngle";
+            ButtonSetRotationAngle.Size = new Size(246, 41);
+            ButtonSetRotationAngle.TabIndex = 30;
+            ButtonSetRotationAngle.Text = "SetRotationAngle";
+            ButtonSetRotationAngle.UseVisualStyleBackColor = true;
+            ButtonSetRotationAngle.Click += ButtonSetRotationAngle_Click;
+            // 
+            // TextBoxGetRotationAngle
+            // 
+            TextBoxGetRotationAngle.Font = new Font("맑은 고딕", 18F);
+            TextBoxGetRotationAngle.Location = new Point(326, 455);
+            TextBoxGetRotationAngle.Name = "TextBoxGetRotationAngle";
+            TextBoxGetRotationAngle.ReadOnly = true;
+            TextBoxGetRotationAngle.Size = new Size(212, 39);
+            TextBoxGetRotationAngle.TabIndex = 33;
+            // 
+            // ButtonGetRotationAngle
+            // 
+            ButtonGetRotationAngle.Font = new Font("맑은 고딕", 9F);
+            ButtonGetRotationAngle.Location = new Point(326, 408);
+            ButtonGetRotationAngle.Name = "ButtonGetRotationAngle";
+            ButtonGetRotationAngle.Size = new Size(212, 41);
+            ButtonGetRotationAngle.TabIndex = 32;
+            ButtonGetRotationAngle.Text = "GetRotationAngle";
+            ButtonGetRotationAngle.UseVisualStyleBackColor = true;
+            ButtonGetRotationAngle.Click += ButtonGetRotationAngle_Click;
+            // 
             // EngineClient
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(565, 357);
+            ClientSize = new Size(577, 515);
+            Controls.Add(TextBoxGetRotationAngle);
+            Controls.Add(ButtonGetRotationAngle);
+            Controls.Add(TextBoxSetRotationAngle);
+            Controls.Add(ButtonSetRotationAngle);
+            Controls.Add(CheckBoxSetFlipY);
+            Controls.Add(CheckBoxSetFlipX);
+            Controls.Add(CheckBoxGetFlipY);
+            Controls.Add(CheckBoxGetFlipX);
+            Controls.Add(TextBoxGetTemp);
+            Controls.Add(ButtonGetTemp);
+            Controls.Add(ButtonGetFlipY);
+            Controls.Add(ButtonGetFlipX);
             Controls.Add(ButtonEngineSet);
             Controls.Add(ComboBoxEngineModel);
             Controls.Add(ButtonSetFlipY);
@@ -314,5 +452,17 @@
         private Button ButtonSetFlipY;
         private ComboBox ComboBoxEngineModel;
         private Button ButtonEngineSet;
+        private Button ButtonGetFlipY;
+        private Button ButtonGetFlipX;
+        private TextBox TextBoxGetTemp;
+        private Button ButtonGetTemp;
+        private CheckBox CheckBoxGetFlipX;
+        private CheckBox CheckBoxGetFlipY;
+        private CheckBox CheckBoxSetFlipY;
+        private CheckBox CheckBoxSetFlipX;
+        private TextBox TextBoxSetRotationAngle;
+        private Button ButtonSetRotationAngle;
+        private TextBox TextBoxGetRotationAngle;
+        private Button ButtonGetRotationAngle;
     }
 }

@@ -25,7 +25,7 @@ public:
     bool setLEDCurrent(int brightness) override;
     int getLedCurrent() override;
     int applyLedCurrent(int brightness);
-    bool imageFlip(bool onOff) override;
+    bool imageFlip(bool onOff);
 
     int getInteriorLight();
     int setInteriorLight(int sel, CY_HANDLE handle);

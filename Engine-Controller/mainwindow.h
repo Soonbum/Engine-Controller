@@ -42,7 +42,11 @@ private slots:
     void on_pushButtonSelectImage_clicked();
     void on_pushButtonSetFlipX_clicked();
     void on_pushButtonSetFlipY_clicked();
-    void on_pushButtonDemoPlay_clicked();
+    void on_pushButtonGetFlipX_clicked();
+    void on_pushButtonGetFlipY_clicked();
+    void on_pushButtonSetRotationAngle_clicked();
+    void on_pushButtonGetRotationAngle_clicked();
+    void on_pushButtonGetTemp_clicked();
 
     void handleNewConnection();
     void handleClientData();

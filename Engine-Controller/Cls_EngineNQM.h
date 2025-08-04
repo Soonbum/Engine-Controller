@@ -18,7 +18,7 @@ public:
     int getLedCurrent() override;
     bool motorControl(bool rear_front, bool upDown, int step);
     int temperatureSensor(QString sort);
-    bool imageFlip(bool onOff) override;
+    bool imageFlip(bool onOff);
     int lightSensor();
     bool setFanSpeed(QString sort, int speed);
     int getASICREADY();

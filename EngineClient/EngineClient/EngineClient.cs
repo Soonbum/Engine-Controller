@@ -20,40 +20,8 @@ namespace EngineClient
 
             // 엔진 모델 추가 및 선택
             ComboBoxEngineModel.Items.AddRange(["NVR", "NQM+"]);
-            ComboBoxEngineModel.SelectedItem = "NQM+";
+            ComboBoxEngineModel.SelectedItem = "NVR";
         }
-
-        //public async Task<string> ConnectAsync(string ipAddress, int port = 52852)
-        //{
-        //    try
-        //    {
-        //        // 이전에 연결된 리소스가 있다면 정리
-        //        Disconnect();
-
-        //        tcpClient = new TcpClient();
-        //        cts = new CancellationTokenSource(); // 취소 토큰 초기화
-
-        //        // Wait() 대신 await를 사용하여 UI 스레드를 차단하지 않음
-        //        await tcpClient.ConnectAsync(ipAddress, port);
-
-        //        if (!tcpClient.Connected)
-        //        {
-        //            throw new Exception("Connection failed.");
-        //        }
-
-        //        stream = tcpClient.GetStream();
-
-        //        using (var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true)) // 마지막 true: 스트림을 닫지 않음
-        //        {
-        //            return await reader.ReadLineAsync();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Disconnect();
-        //        return $"Connection Failed: {ex.Message}";
-        //    }
-        //}
 
         // 서버로부터의 메시지를 지속적으로 수신하는 비동기 메서드
         private async Task ListenForServerMessagesAsync(CancellationToken token)
@@ -77,13 +45,43 @@ namespace EngineClient
                                 isFirstMessage = false;
                             }
                             // 두 번째 이후 메시지는 명령어 응답으로 처리
-                            else if (message.StartsWith("CurrentValue:"))
+                            else if (message.StartsWith("GetCurrent:"))
                             {
-                                string currentValue = message.Substring(13);
+                                string currentValue = message.Substring(11);
                                 TextBoxGetCurrent.Text = currentValue;
                                 TextBoxResult.Text = $"현재 값 수신: {currentValue}";
                             }
-                            // 다른 종류의 서버 응답 처리
+                            else if (message.StartsWith("GetFlipX:"))
+                            {
+                                string currentValue = message.Substring(9);
+                                TextBoxResult.Text = $"현재 값 수신: {currentValue}";
+                                if (Convert.ToInt16(currentValue) == 0)
+                                    CheckBoxGetFlipX.Checked = false;
+                                else
+                                    CheckBoxGetFlipX.Checked = true;
+                            }
+                            else if (message.StartsWith("GetFlipY:"))
+                            {
+                                string currentValue = message.Substring(9);
+                                TextBoxResult.Text = $"현재 값 수신: {currentValue}";
+                                if (Convert.ToInt16(currentValue) == 0)
+                                    CheckBoxGetFlipY.Checked = false;
+                                else
+                                    CheckBoxGetFlipY.Checked = true;
+                            }
+                            else if (message.StartsWith("GetRotationAngle:"))
+                            {
+                                string currentValue = message.Substring(17);
+                                TextBoxResult.Text = $"현재 값 수신: {currentValue}";
+                                TextBoxGetRotationAngle.Text = currentValue;
+                            }
+                            else if (message.StartsWith("GetTemp:"))
+                            {
+                                string currentValue = message.Substring(8);
+                                TextBoxResult.Text = $"현재 값 수신: {currentValue}";
+                                TextBoxGetTemp.Text = currentValue;
+                            }
+                            // ... 필요한 경우 확장할 것
                         }));
                     }
                 }
@@ -140,8 +138,6 @@ namespace EngineClient
 
                 // 중요: 연결 성공 직후, 서버 메시지 수신을 위한 백그라운드 Task 시작
                 _ = ListenForServerMessagesAsync(cts.Token);
-
-                TextBoxResult.Text = "서버에 연결되었습니다. 초기 정보를 기다리는 중...";
             }
             catch (Exception ex)
             {
@@ -262,14 +258,54 @@ namespace EngineClient
             }
         }
 
-        private void ButtonSetFlipX_Click(object sender, EventArgs e)
+        private async void ButtonSetFlipX_Click(object sender, EventArgs e)
         {
-            // ...
+            if (CheckBoxSetFlipX.Checked)
+                await SendCommandAsync("SetFlipX:1");
+            else
+                await SendCommandAsync("SetFlipX:0");
         }
 
-        private void ButtonSetFlipY_Click(object sender, EventArgs e)
+        private async void ButtonSetFlipY_Click(object sender, EventArgs e)
         {
-            // ...
+            if (CheckBoxSetFlipY.Checked)
+                await SendCommandAsync("SetFlipY:1");
+            else
+                await SendCommandAsync("SetFlipY:0");
+        }
+
+        private async void ButtonGetFlipX_Click(object sender, EventArgs e)
+        {
+            await SendCommandAsync("GetFlipX");
+        }
+
+        private async void ButtonGetFlipY_Click(object sender, EventArgs e)
+        {
+            await SendCommandAsync("GetFlipY");
+        }
+
+        private async void ButtonSetRotationAngle_Click(object sender, EventArgs e)
+        {
+            // 회전 각도는 0, 90, 180, 270도만 입력할 수 있음
+            if (int.TryParse(TextBoxSetRotationAngle.Text, out int angle) && (angle == 0 || angle == 90 || angle == 180 || angle == 270))
+            {
+                // 유효하면 "SetRotationAngle:{angle}" 명령 전송
+                await SendCommandAsync($"SetRotationAngle:{angle}");
+            }
+            else
+            {
+                TextBoxResult.Text = "0, 90, 180 ,270 중 하나를 입력하세요";
+            }
+        }
+
+        private async void ButtonGetRotationAngle_Click(object sender, EventArgs e)
+        {
+            await SendCommandAsync("GetRotationAngle");
+        }
+
+        private async void ButtonGetTemp_Click(object sender, EventArgs e)
+        {
+            await SendCommandAsync("GetTemp");
         }
 
         public async Task<bool> SendImageAsync(string filePath)
